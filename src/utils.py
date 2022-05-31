@@ -36,3 +36,18 @@ def parser_mc_results(rho, cut:bool=True):
 
 def parser_results(rho):
     return np.array([x[1] for x in sorted(zip(rho.keys(), rho.values()), key=lambda x:x[0])])
+
+import os
+def checkFolder(path):
+    if not os.path.isdir(path):
+        os.makedirs(path)
+
+import pickle as pkl
+def save(path, data):
+    with open(path, "wb") as f:
+        pkl.dump(data, f)
+
+def load(path):
+    with open(path, "rb") as f:
+        data = pkl.load(f)
+    return data

@@ -39,9 +39,9 @@ def SIS_ELE(N, beta, gamma, node_neig_dict, tmax, I0, steady=True):
     for t in range(1, tmax):
         PI, PII = SIS_ELE_base(N, gamma, beta, PI, PII, node_neig_dict)
         rho[t] = sum(PI.values()) / N
-        if ifConverge(rho[:t], N):
-            rho = rho[:t]
-            break
+        # if ifConverge(rho[:t], N):
+        #     rho = rho[:t]
+        #     break
     
     if steady:
         out = np.mean(rho[-100:])
