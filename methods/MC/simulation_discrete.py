@@ -1,11 +1,3 @@
-# -*- encoding: utf-8 -*-
-'''
-@File    :   simulation_discrete.py
-@Time    :   2022/04/05 14:39:01
-@Author  :   Fei Gao
-@Contact :   feig@mail.bnu.edu.cn
-BNU, Beijing, China
-'''
 
 import numpy as np
 from multiprocessing import Pool
