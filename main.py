@@ -21,12 +21,13 @@ from methods.MC.core import SIS_MC
 from methods.ELE.core import SIS_ELE
 from methods.MMCA.core import SIS_MMCA
 from methods.rDMP.core import SIS_rDMP
+from methods.TDMP.core import SIS_TDMP
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser("Message passing with triangles")
     parser.add_argument("--net", type=str, default="er", help="the type of structure of networks")
-    parser.add_argument("--net_k", type=float, default=6, help="the average degree in er net")
-    parser.add_argument("--net_m", type=int, default=6, help="the parameter of node in small world")
+    parser.add_argument("--net_k", type=float, default=6.0, help="the average degree in er net")
+    parser.add_argument("--net_m", type=int, default=6.0, help="the parameter of node in small world")
     parser.add_argument("--n", type=int, default=500, help="the number of nodes")
     parser.add_argument("--cpu_core", type=int, default=50, help="the number of cpu cores to be used")
     parser.add_argument("--num_mc", type=int, default=200)
@@ -34,6 +35,7 @@ if __name__ == "__main__":
     parser.add_argument("--ELE", action="store_true")
     parser.add_argument("--MMCA", action="store_true")
     parser.add_argument("--rDMP", action="store_true")
+    parser.add_argument("--TDMP", action="store_true")
     parser.add_argument("--gamma", type=float, default=0.1, help="the recover probability of every node")
     parser.add_argument("--p0", type=float, default=0.5, help="the percent of initial infencted nodes")
     parser.add_argument("--tmax", type=int, default=1000, help="the maximum number of steps")
@@ -108,6 +110,21 @@ if __name__ == "__main__":
             rho[b] = r
         rho = parser_results(rho)
         save(file_path+"rDMP.pkl", rho)
+
+    if args.TDMP:
+        pool = Pool(min([args.cpu_core, len(betas)]))
+        results = []
+        for beta in betas:
+            results.append(pool.apply_async(SIS_TDMP, (args.n, beta, args.gamma, node_edge_dict, node_tri_dict, args.tmax, I0)))
+        pool.close()
+        pool.join()
+
+        res = [r.get() for r in results]
+        rho = {}
+        for b, r in res:
+            rho[b] = r
+        rho = parser_results(rho)
+        save(file_path+"TDMP.pkl", rho)
     
 
 
