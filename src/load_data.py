@@ -8,7 +8,6 @@ BNU, Beijing, China
 '''
 
 import random
-from re import X
 import networkx as nx
 import numpy as np
 from collections import defaultdict
@@ -20,6 +19,10 @@ def import_random_er(n:int, k:float):
 
 def import_random_sw(n:int, m:int, p:float=0.3):
     G = nx.watts_strogatz_graph(n, k=m, p=p)
+    return post_process(G)
+
+def import_random_sf(n:int, m:int):
+    G = nx.barabasi_albert_graph(n, m=m)
     return post_process(G)
 
 def post_process(G:nx.Graph):

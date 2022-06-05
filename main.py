@@ -16,7 +16,7 @@ from tqdm import tqdm
 from multiprocessing import Pool
 
 from src.utils import parser_mc_results, parser_results, checkFolder, save
-from src.load_data import import_random_er, import_random_sw
+from src.load_data import import_random_er, import_random_sw, import_random_sf
 from methods.MC.core import SIS_MC
 from methods.ELE.core import SIS_ELE
 from methods.MMCA.core import SIS_MMCA
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser("Message passing with triangles")
     parser.add_argument("--net", type=str, default="er", help="the type of structure of networks")
     parser.add_argument("--net_k", type=float, default=6.0, help="the average degree in er net")
-    parser.add_argument("--net_m", type=int, default=6.0, help="the parameter of node in small world")
+    parser.add_argument("--net_m", type=int, default=6, help="the parameter of node in small world")
     parser.add_argument("--n", type=int, default=500, help="the number of nodes")
     parser.add_argument("--cpu_core", type=int, default=50, help="the number of cpu cores to be used")
     parser.add_argument("--num_mc", type=int, default=200)
@@ -49,6 +49,10 @@ if __name__ == "__main__":
     elif args.net == "sw":
         assert args.net_m is not None
         node_neig_dict, node_edge_dict, node_tri_dict = import_random_sw(args.n, m=args.net_m)
+        file_path = "results/{}/N{}/m_{}/".format(args.net, args.n, args.net_m)
+    elif args.net == "sf":
+        assert args.net_m is not None
+        node_neig_dict, node_edge_dict, node_tri_dict = import_random_sf(args.n, m=args.net_m)
         file_path = "results/{}/N{}/m_{}/".format(args.net, args.n, args.net_m)
     else:
         raise NotImplementedError
@@ -125,13 +129,3 @@ if __name__ == "__main__":
             rho[b] = r
         rho = parser_results(rho)
         save(file_path+"TDMP.pkl", rho)
-    
-
-
-
-    
-    
-    
-
-    
-
